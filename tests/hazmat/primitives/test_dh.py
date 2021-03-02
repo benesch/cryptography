@@ -87,7 +87,7 @@ def test_dh_numbers():
         dh.DHPublicNumbers(1, None)  # type: ignore[arg-type]
 
     with pytest.raises(TypeError):
-        dh.DHPublicNumbers(None, params)
+        dh.DHPublicNumbers(None, params)  # type:ignore[arg-type]
 
     private = dh.DHPrivateNumbers(1, public)
 
@@ -98,7 +98,7 @@ def test_dh_numbers():
         dh.DHPrivateNumbers(1, None)  # type: ignore[arg-type]
 
     with pytest.raises(TypeError):
-        dh.DHPrivateNumbers(None, public)
+        dh.DHPrivateNumbers(None, public)  # type:ignore[arg-type]
 
 
 def test_dh_parameter_numbers_equality():
@@ -594,7 +594,7 @@ class TestDHPrivateKeySerialization(object):
         key = parameters.generate_private_key()
         with pytest.raises(TypeError):
             key.private_bytes(
-                "notencoding",
+                "notencoding",  # type:ignore[arg-type]
                 serialization.PrivateFormat.PKCS8,
                 serialization.NoEncryption(),
             )
@@ -605,7 +605,7 @@ class TestDHPrivateKeySerialization(object):
         with pytest.raises(ValueError):
             key.private_bytes(
                 serialization.Encoding.PEM,
-                "invalidformat",
+                "invalidformat",  # type:ignore[arg-type]
                 serialization.NoEncryption(),
             )
 
@@ -616,7 +616,7 @@ class TestDHPrivateKeySerialization(object):
             key.private_bytes(
                 serialization.Encoding.PEM,
                 serialization.PrivateFormat.PKCS8,
-                "notanencalg",
+                "notanencalg",  # type:ignore[arg-type]
             )
 
     def test_private_bytes_unsupported_encryption_type(self, backend):
@@ -747,7 +747,8 @@ class TestDHPublicKeySerialization(object):
         key = parameters.generate_private_key().public_key()
         with pytest.raises(TypeError):
             key.public_bytes(
-                "notencoding", serialization.PublicFormat.SubjectPublicKeyInfo
+                "notencoding",  # type:ignore[arg-type]
+                serialization.PublicFormat.SubjectPublicKeyInfo,
             )
 
     def test_public_bytes_pkcs1_unsupported(self, backend):
@@ -903,13 +904,17 @@ class TestDHParameterSerialization(object):
         parameters = FFDH3072_P.parameters(backend)
         with pytest.raises(TypeError):
             parameters.parameter_bytes(
-                "notencoding", serialization.ParameterFormat.PKCS3
+                "notencoding",  # type:ignore[arg-type]
+                serialization.ParameterFormat.PKCS3,
             )
 
     def test_parameter_bytes_invalid_format(self, backend):
         parameters = FFDH3072_P.parameters(backend)
         with pytest.raises(ValueError):
-            parameters.parameter_bytes(serialization.Encoding.PEM, "notformat")
+            parameters.parameter_bytes(
+                serialization.Encoding.PEM,
+                "notformat",  # type: ignore[arg-type]
+            )
 
     def test_parameter_bytes_openssh_unsupported(self, backend):
         parameters = FFDH3072_P.parameters(backend)

@@ -10,7 +10,7 @@ from math import gcd
 from cryptography import utils
 from cryptography.exceptions import UnsupportedAlgorithm, _Reasons
 from cryptography.hazmat.backends import _get_backend
-from cryptography.hazmat.backends.interfaces import RSABackend
+from cryptography.hazmat.backends.interfaces import Backend, RSABackend
 from cryptography.hazmat.primitives import _serialization, hashes
 from cryptography.hazmat.primitives._asymmetric import AsymmetricPadding
 from cryptography.hazmat.primitives.asymmetric import (
@@ -147,7 +147,9 @@ RSAPublicKeyWithSerialization = RSAPublicKey
 
 
 def generate_private_key(
-    public_exponent: int, key_size: int, backend=None
+    public_exponent: int,
+    key_size: int,
+    backend: typing.Optional[Backend] = None,
 ) -> RSAPrivateKey:
     backend = _get_backend(backend)
     if not isinstance(backend, RSABackend):
@@ -362,7 +364,9 @@ class RSAPrivateNumbers(object):
     iqmp = utils.read_only_property("_iqmp")
     public_numbers = utils.read_only_property("_public_numbers")
 
-    def private_key(self, backend=None) -> RSAPrivateKey:
+    def private_key(
+        self, backend: typing.Optional[Backend] = None
+    ) -> RSAPrivateKey:
         backend = _get_backend(backend)
         return backend.load_rsa_private_numbers(self)
 
@@ -408,7 +412,9 @@ class RSAPublicNumbers(object):
     e = utils.read_only_property("_e")
     n = utils.read_only_property("_n")
 
-    def public_key(self, backend=None) -> RSAPublicKey:
+    def public_key(
+        self, backend: typing.Optional[Backend] = None
+    ) -> RSAPublicKey:
         backend = _get_backend(backend)
         return backend.load_rsa_public_numbers(self)
 

@@ -8,7 +8,7 @@ import typing
 
 from cryptography.exceptions import UnsupportedAlgorithm, _Reasons
 from cryptography.hazmat.backends import _get_backend
-from cryptography.hazmat.backends.interfaces import HMACBackend
+from cryptography.hazmat.backends.interfaces import Backend, HMACBackend
 from cryptography.hazmat.primitives import constant_time, hmac
 from cryptography.hazmat.primitives.hashes import SHA1, SHA256, SHA512
 from cryptography.hazmat.primitives.twofactor import InvalidToken
@@ -24,9 +24,9 @@ class HOTP(object):
         key: bytes,
         length: int,
         algorithm: _ALLOWED_HASH_TYPES,
-        backend=None,
+        backend: typing.Optional[Backend] = None,
         enforce_key_length: bool = True,
-    ):
+    ) -> None:
         backend = _get_backend(backend)
         if not isinstance(backend, HMACBackend):
             raise UnsupportedAlgorithm(

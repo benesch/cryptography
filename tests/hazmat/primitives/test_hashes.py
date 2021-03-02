@@ -169,7 +169,7 @@ def test_invalid_backend():
     pretend_backend = object()
 
     with raises_unsupported_algorithm(_Reasons.BACKEND_MISSING_INTERFACE):
-        hashes.Hash(hashes.SHA1(), pretend_backend)
+        hashes.Hash(hashes.SHA1(), pretend_backend)  # type:ignore[arg-type]
 
 
 @pytest.mark.requires_backend_interface(interface=HashBackend)

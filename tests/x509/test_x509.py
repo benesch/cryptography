@@ -66,8 +66,7 @@ from ..hazmat.primitives.test_ec import _skip_curve_unsupported
 from ..utils import load_nist_vectors, load_vectors_from_file
 
 
-@utils.register_interface(x509.ExtensionType)
-class DummyExtension(object):
+class DummyExtension(x509.ExtensionType):
     oid = x509.ObjectIdentifier("1.2.3.4")
 
 
@@ -1695,10 +1694,14 @@ class TestRSACertificateRequest(object):
         basic_constraints = cert.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
         subject_alternative_name = cert.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+        assert isinstance(
+            subject_alternative_name.value, x509.SubjectAlternativeName
         )
         assert list(subject_alternative_name.value) == [
             x509.DNSName("cryptography.io"),
@@ -2558,10 +2561,14 @@ class TestCertificateBuilder(object):
         basic_constraints = cert.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
         subject_alternative_name = cert.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+        assert isinstance(
+            subject_alternative_name.value, x509.SubjectAlternativeName
         )
         assert list(subject_alternative_name.value) == [
             x509.DNSName("cryptography.io"),
@@ -2607,10 +2614,14 @@ class TestCertificateBuilder(object):
         basic_constraints = cert.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
         subject_alternative_name = cert.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+        assert isinstance(
+            subject_alternative_name.value, x509.SubjectAlternativeName
         )
         assert list(subject_alternative_name.value) == [
             x509.DNSName("cryptography.io"),
@@ -2663,10 +2674,14 @@ class TestCertificateBuilder(object):
         basic_constraints = cert.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
         subject_alternative_name = cert.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+        assert isinstance(
+            subject_alternative_name.value, x509.SubjectAlternativeName
         )
         assert list(subject_alternative_name.value) == [
             x509.DNSName("cryptography.io"),
@@ -2700,6 +2715,7 @@ class TestCertificateBuilder(object):
         )
 
         cert = builder.sign(issuer_private_key, hashes.SHA256(), backend)
+        assert cert.signature_hash_algorithm is not None
         issuer_private_key.public_key().verify(
             cert.signature,
             cert.tbs_certificate_bytes,
@@ -2759,10 +2775,14 @@ class TestCertificateBuilder(object):
         basic_constraints = cert.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
         subject_alternative_name = cert.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+        assert isinstance(
+            subject_alternative_name.value, x509.SubjectAlternativeName
         )
         assert list(subject_alternative_name.value) == [
             x509.DNSName("cryptography.io"),
@@ -2796,6 +2816,7 @@ class TestCertificateBuilder(object):
         )
 
         cert = builder.sign(issuer_private_key, hashes.SHA256(), backend)
+        assert cert.signature_hash_algorithm is not None
         issuer_private_key.public_key().verify(
             cert.signature,
             cert.tbs_certificate_bytes,
@@ -3306,6 +3327,7 @@ class TestCertificateBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.path_length is None
 
     @pytest.mark.parametrize(
@@ -3353,7 +3375,9 @@ class TestCertificateSigningRequestBuilder(object):
             x509.Name([])
         )
         with pytest.raises(TypeError):
-            builder.sign(private_key, "NotAHash", backend)
+            builder.sign(
+                private_key, "NotAHash", backend  # type: ignore[arg-type]
+            )
 
     @pytest.mark.supported(
         only_if=lambda backend: backend.ed25519_supported(),
@@ -3460,6 +3484,7 @@ class TestCertificateSigningRequestBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is True
         assert basic_constraints.value.path_length == 2
 
@@ -3609,6 +3634,7 @@ class TestCertificateSigningRequestBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is False
         assert basic_constraints.value.path_length is None
 
@@ -3645,6 +3671,7 @@ class TestCertificateSigningRequestBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is True
         assert basic_constraints.value.path_length == 2
 
@@ -3752,6 +3779,7 @@ class TestCertificateSigningRequestBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is True
         assert basic_constraints.value.path_length == 2
 
@@ -3895,11 +3923,13 @@ class TestCertificateSigningRequestBuilder(object):
         basic_constraints = request.extensions.get_extension_for_oid(
             ExtensionOID.BASIC_CONSTRAINTS
         )
+        assert isinstance(basic_constraints.value, x509.BasicConstraints)
         assert basic_constraints.value.ca is True
         assert basic_constraints.value.path_length == 2
         ext = request.extensions.get_extension_for_oid(
             ExtensionOID.SUBJECT_ALTERNATIVE_NAME
         )
+        assert isinstance(ext.value, x509.SubjectAlternativeName)
         assert list(ext.value) == [x509.DNSName("cryptography.io")]
 
     @pytest.mark.requires_backend_interface(interface=EllipticCurveBackend)

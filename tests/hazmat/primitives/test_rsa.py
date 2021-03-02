@@ -387,7 +387,9 @@ def test_rsa_generate_invalid_backend():
     pretend_backend = object()
 
     with raises_unsupported_algorithm(_Reasons.BACKEND_MISSING_INTERFACE):
-        rsa.generate_private_key(65537, 2048, pretend_backend)
+        rsa.generate_private_key(
+            65537, 2048, pretend_backend  # type:ignore[arg-type]
+        )
 
 
 @pytest.mark.requires_backend_interface(interface=RSABackend)
