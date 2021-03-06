@@ -5133,7 +5133,7 @@ class TestName(object):
 
     def test_not_nameattribute(self):
         with pytest.raises(TypeError):
-            x509.Name(["not-a-NameAttribute"])
+            x509.Name(["not-a-NameAttribute"])  # type: ignore[list-item]
 
     @pytest.mark.requires_backend_interface(interface=X509Backend)
     def test_bytes(self, backend):
